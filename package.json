@@ -19,8 +19,10 @@
   "homepage": "https://github.com/hwupathum/fileserver-yaala#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mongoose": "^5.10.8",
     "swagger-jsdoc": "^4.2.0",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

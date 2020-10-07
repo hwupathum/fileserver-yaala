@@ -25,11 +25,15 @@
   "tags": [
     {
       "name": "auth",
-      "description": "Used for login, signup, logout"
+      "description": "Used for login, signup"
+    },
+    {
+      "name": "user",
+      "description": "Used for logged in functions"
     }
   ],
   "paths": {
-    "/user/login": {
+    "/auth/login": {
       "post": {
         "tags": [
           "auth"
@@ -48,22 +52,32 @@
         },
         "responses": {
           "200": {
-            "description": "Login successful",
+            "description": "Login successful"
+          },
+          "403": {
+            "description": "Username or password is incorrect",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
           },
-          "403": {
-            "description": "Invalid email or password."
+          "404": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/user/register": {
+    "/auth/register": {
       "post": {
         "tags": [
           "auth"
@@ -82,20 +96,27 @@
         },
         "responses": {
           "200": {
-            "description": "Login successful",
+            "description": "Login successful"
+          },
+          "403": {
+            "description": "Email already exists.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
           },
-          "403": {
-            "description": "Email already exists."
-          },
           "404": {
-            "description": "Error"
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
           }
         }
       }
@@ -103,7 +124,7 @@
     "/user/logout": {
       "post": {
         "tags": [
-          "auth"
+          "user"
         ],
         "summary": "User logout",
         "operationId": "userLogout",
@@ -135,32 +156,48 @@
           }
         }
       },
-      "User": {
+      "Message": {
         "type": "object",
         "properties": {
-          "id": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "_id": {
             "type": "string",
             "format": "uuid",
+            "maximum": 100,
             "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
           },
           "name": {
             "type": "string",
+            "minimum": 2,
+            "maximum": 12,
             "example": "John Dove"
           },
           "email": {
             "type": "string",
             "format": "email",
+            "maximum": 100,
             "example": "abc@def.com"
           },
           "password": {
             "type": "string",
             "format": "password",
+            "maximum": 100,
             "example": "1234"
           }
         }
-      },
-      "Token": {
-        "type": "object"
       }
     }
   }
