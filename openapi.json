@@ -152,7 +152,7 @@
           "password": {
             "type": "string",
             "format": "password",
-            "example": "1234"
+            "example": "12345678"
           }
         }
       },
@@ -173,12 +173,6 @@
           "password"
         ],
         "properties": {
-          "_id": {
-            "type": "string",
-            "format": "uuid",
-            "maximum": 100,
-            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          },
           "name": {
             "type": "string",
             "minimum": 2,
@@ -188,14 +182,17 @@
           "email": {
             "type": "string",
             "format": "email",
-            "maximum": 100,
             "example": "abc@def.com"
           },
           "password": {
             "type": "string",
             "format": "password",
-            "maximum": 100,
-            "example": "1234"
+            "example": "12345678"
+          },
+          "password2": {
+            "type": "string",
+            "format": "password",
+            "example": "12345678"
           }
         }
       }
