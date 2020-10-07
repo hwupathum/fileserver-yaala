@@ -1,0 +1,28 @@
+{
+  "name": "fileserver-yaala",
+  "version": "1.0.0",
+  "description": "File Server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hwupathum/fileserver-yaala.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hwupathum/fileserver-yaala/issues"
+  },
+  "homepage": "https://github.com/hwupathum/fileserver-yaala#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "swagger-jsdoc": "^4.2.0",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
