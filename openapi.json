@@ -362,6 +362,7 @@
         "required": [
           "it",
           "fileName",
+          "size",
           "data",
           "ownerId",
           "uploadDate"

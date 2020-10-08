@@ -12,6 +12,10 @@ const fileSchema = mongoose.Schema({
     required: true,
     maxLength: 255
   },
+  size: {
+    type: Number,
+    required: true
+  },
   data: {
     type: Buffer,
     maxLength: 6e+6,

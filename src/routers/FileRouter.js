@@ -6,6 +6,5 @@ router.post("/", controller.fileController.fileUpload);
 router.get("/", controller.fileController.fileSearch);
 router.get("/:fileId", controller.fileController.fileView);
 router.delete("/:fileId", controller.fileController.fileDelete);
-router.put("/:fileId", controller.fileController.fileEdit);
 
 module.exports = router;

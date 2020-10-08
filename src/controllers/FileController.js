@@ -11,6 +11,7 @@ module.exports.fileUpload = async (req, res) => {
       fileName: req.body.fileName,
       data: req.body.data,
       path: req.body.path,
+      size: req.body.size,
       uploadDate: Date.now(),
       ownerId: ownerId
     });
@@ -58,11 +59,6 @@ module.exports.fileView = async (req, res) => {
     console.log(error);
     return res.status(403).json({message: error.message})
   }
-};
-
-module.exports.fileEdit = async (req, res) => {
-  // upload
-  res.send('edit');
 };
 
 module.exports.fileSearch = async (req, res) => {
