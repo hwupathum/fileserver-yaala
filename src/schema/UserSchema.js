@@ -1,6 +1,12 @@
-mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const uuid = require('uuid');
 
 const userSchema = mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+    default: uuid.v1()
+  },
   name: {
     type: String,
     required: true,

@@ -1,4 +1,4 @@
-mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const bcrypt = require('bcrypt');
@@ -26,7 +26,7 @@ userSchema.methods.comparePassword = async function (password) {
 
 // generate token
 userSchema.methods.generateToken = async function() {
-  this.token= jwt.sign(this._id.toHexString(), config.SECRET);
+  this.token = jwt.sign(this.id, config.SECRET);
   return this.save();
 };
 
@@ -34,7 +34,7 @@ userSchema.methods.generateToken = async function() {
 userSchema.statics.findByToken = async function (token) {
   if(!token) return token;
   const decode = await jwt.verify(token, config.SECRET);
-  return this.findOne({ _id: decode, token: token });
+  return this.findOne({ id: decode, token: token });
 };
 
 //delete token

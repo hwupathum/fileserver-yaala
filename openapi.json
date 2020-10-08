@@ -65,7 +65,7 @@
               }
             }
           },
-          "404": {
+          "403": {
             "description": "Error",
             "content": {
               "application/json": {
@@ -106,7 +106,7 @@
               }
             }
           },
-          "404": {
+          "403": {
             "description": "Error",
             "content": {
               "application/json": {
@@ -133,7 +133,7 @@
           "401": {
             "description": "Need login to fulfill request"
           },
-          "404": {
+          "403": {
             "description": "Error",
             "content": {
               "application/json": {
@@ -165,11 +165,121 @@
         },
         "responses": {
           "200": {
-            "description": "File Uploaded",
+            "description": "File Uploaded / logical error",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/{fileId}": {
+      "get": {
+        "tags": [
+          "file"
+        ],
+        "summary": "View a file",
+        "operationId": "fileView",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "File Id",
+            "example": "9bf5e960-096a-11eb-99a5-b5fd06f70125"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File View / Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/File"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "file"
+        ],
+        "summary": "Delete a file",
+        "operationId": "fileDelete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "File Id",
+            "example": "9bf5e960-096a-11eb-99a5-b5fd06f70125"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File Delete / Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
                 }
               }
             }
@@ -250,12 +360,18 @@
       "File": {
         "type": "object",
         "required": [
+          "it",
           "fileName",
           "data",
           "ownerId",
           "uploadDate"
         ],
         "properties": {
+          "id": {
+            "type": "string",
+            "maximum": 255,
+            "example": "f12fa660-0969-11eb-8225-d5d55e0400df"
+          },
           "fileName": {
             "type": "string",
             "maximum": 255,
@@ -263,6 +379,7 @@
           },
           "size": {
             "type": "integer",
+            "format": "int32",
             "example": 1024
           },
           "data": {

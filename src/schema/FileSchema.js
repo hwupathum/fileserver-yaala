@@ -1,6 +1,12 @@
 mongoose = require('mongoose');
+const uuid = require('uuid');
 
 const fileSchema = mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+    default: uuid.v1()
+  },
   fileName: {
     type: String,
     required: true,

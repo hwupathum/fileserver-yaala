@@ -3,6 +3,6 @@ module.exports.logout = async (req, res) => {
     await req.user.deleteToken();
     return res.sendStatus(200);
   } catch (err) {
-    return res.status(404).json({"message": err});
+    return res.status(403).json({"message": err});
   }
 };

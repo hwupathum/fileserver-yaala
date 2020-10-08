@@ -22,7 +22,7 @@ module.exports.fileUpload = async (req, res) => {
     }
 
     await file.save();
-    res.send({success: true, message: "File Uploaded Successfully"});
+    res.json({success: true, message: "File Uploaded Successfully"});
   } catch (error) {
     console.log(error);
     return res.status(403).json({message: error.message})
@@ -30,13 +30,34 @@ module.exports.fileUpload = async (req, res) => {
 };
 
 module.exports.fileDelete = async (req, res) => {
-  // upload
-  res.send('delete');
+  const token = req.cookies.auth;
+  try {
+    // check file exists
+    const existingFile = await File.findByToken(req.params.fileId, token);
+    if(!existingFile) {
+      return res.json({success: false, message: "File Does not Exist"});
+    }
+    await existingFile.delete();
+    res.json({success: true, message: "File Deleted"});
+  } catch (error) {
+    console.log(error);
+    return res.status(403).json({message: error.message})
+  }
 };
 
 module.exports.fileView = async (req, res) => {
-  // upload
-  res.send('view');
+  const token = req.cookies.auth;
+  try {
+    // check file exists
+    const existingFile = await File.findByToken(req.params.fileId, token);
+    if(!existingFile) {
+      return res.json({success: false, message: "File Does not Exist"});
+    }
+    res.json({success: true, existingFile });
+  } catch (error) {
+    console.log(error);
+    return res.status(403).json({message: error.message})
+  }
 };
 
 module.exports.fileEdit = async (req, res) => {
