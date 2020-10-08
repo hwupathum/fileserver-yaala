@@ -1,33 +1,30 @@
-const User = require('./../model/user');
+const User = require('./../model/User');
 
 module.exports.login = async (req, res) => {
   const token = req.cookies.auth;
-  console.log(req.body);
   try {
     const user = await User.findByToken(token);
 
     if(user) {
-      return res.status(400).json({
+      return res.json({
+        isAuth: true,
         message:"You are already logged in"
       });
     }
     // if not logged in already
     const existingUser = await User.findOne({ email: req.body.email}).exec();
-    if(!existingUser) return res.status(200).json({isAuth: false, message : 'Auth failed ,email not found'});
+    if(!existingUser) return res.json({isAuth: false, message : 'Login failed ,email not found'});
 
     // compare password
     const isMatch = await existingUser.comparePassword(req.body.password);
-    if(!isMatch) return res.json({ isAuth : false, message : "Password doesn't match"});
+    if(!isMatch) return res.json({isAuth: false, message : "Password doesn't match"});
 
     const data = await existingUser.generateToken();
-    res.cookie('auth',data.token).json({
-      isAuth : true,
-      id : data._id,
-      email : data.email
-    });
+    // send the cookie
+    return res.cookie('auth',data.token).json({ isAuth: "true", message: "success"});
   } catch (error) {
     console.log(error);
-    res.status(400).json({message: error.message})
+    return res.status(403).json({message: error.message})
   }
 };
 
@@ -39,20 +36,21 @@ module.exports.register = async (req, res) => {
     token: req.body.token
   });
 
+  // compare passwords
   if(req.body.password !== req.body.password2)
-    return res.status(400).json({message: "password not match"});
+    return res.json({isAuth: false, message: "password not match"});
 
   try {
+    // check for email exits
     const existingUser = await User.findOne({ email: user.email}).exec();
     if (existingUser) {
-      res.status(400).json({message: "Email already exists"})
+      return res.json({isAuth: false, message: "Email already exists"})
     }
-    const data = await user.save();
-    res.status(200).json({
-      user: data
-    })
+    // register and login user
+    const data = await user.generateToken();
+    return res.cookie('auth',data.token).json({ isAuth: "true", message: "success"});
   } catch (error) {
     console.log(error);
-    res.status(400).json({message: error.message})
+    return res.status(403).json({message: error.message})
   }
 };

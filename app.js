@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyparser=require('body-parser');
+const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
+const OpenApiValidator = require('express-openapi-validator');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
 const db = require("./src/config/config");
@@ -10,10 +11,28 @@ const app = express();
 const router = require("./src/routers");
 
 // body parser
-app.use(bodyparser.urlencoded({extended : false}));
-app.use(bodyparser.json());
+app.use(bodyParser.urlencoded({extended : false}));
+app.use(bodyParser.text());
+app.use(bodyParser.json());
+
 app.use(cookieParser());
 
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: swaggerDocument,
+    ignorePaths: /^\/api-docs/,
+    validateRequests: true, // (default)
+    validateResponses: true, // false by default
+  }),
+);
+
+app.use((err, req, res, next) => {
+  // format error
+  res.status(err.status || "500").json({
+    message: err.message,
+    errors: err.errors,
+  });
+});
 
 // routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
