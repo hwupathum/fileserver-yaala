@@ -1,11 +1,15 @@
 const File = require('./../model/File');
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const Folder = require('./../model/Folder');
+const User = require('./../model/User');
 
 module.exports.fileUpload = async (req, res) => {
   const token = req.cookies.auth;
   try {
-    const ownerId = await jwt.verify(token, config.SECRET);
+    // check user exits
+    const existingUser = await User.findByToken(token);
+    if(!existingUser) {
+      return res.json({success: false, message: "User Does not Exist"});
+    }
 
     const file = new File({
       fileName: req.body.fileName,
@@ -13,11 +17,17 @@ module.exports.fileUpload = async (req, res) => {
       path: req.body.path,
       size: req.body.size,
       uploadDate: Date.now(),
-      ownerId: ownerId
+      ownerId: existingUser.id
     });
 
-    // check file exists
-    const existingFile = await File.findOne({fileName: file.fileName, ownerId: file.ownerId});
+    // check folder exists
+    const existingFolder = await Folder.findOne({ownerId: file.ownerId, path: file.path});
+    if(!existingFolder) {
+      return res.json({success: false, message: "Folder Does not Exists"});
+    }
+
+    // check file exists in the same directory
+    const existingFile = await File.findOne({fileName: file.fileName, ownerId: file.ownerId, path: file.path});
     if(existingFile) {
       return res.json({success: false, message: "File Already Exists"});
     }
@@ -54,7 +64,7 @@ module.exports.fileView = async (req, res) => {
     if(!existingFile) {
       return res.json({success: false, message: "File Does not Exist"});
     }
-    res.json({success: true, existingFile });
+    res.json({success: true, file: existingFile });
   } catch (error) {
     console.log(error);
     return res.status(403).json({message: error.message})
@@ -62,6 +72,13 @@ module.exports.fileView = async (req, res) => {
 };
 
 module.exports.fileSearch = async (req, res) => {
-  // upload
-  res.send('search');
+  const token = req.cookies.auth;
+  try {
+    // check file exists
+    const files = await File.findByPathAndToken(req.query.path, token);
+    res.json({success: true, files });
+  } catch (error) {
+    console.log(error);
+    return res.status(403).json({message: error.message})
+  }
 };

@@ -1,4 +1,5 @@
 const User = require('./../model/User');
+const Folder = require('./../model/Folder');
 
 module.exports.login = async (req, res) => {
   const token = req.cookies.auth;
@@ -48,6 +49,10 @@ module.exports.register = async (req, res) => {
     }
     // register and login user
     const data = await user.generateToken();
+    const baseFolder = new Folder({
+      ownerId: data.id
+    });
+    await baseFolder.save();
     return res.cookie('auth',data.token).json({ isAuth: "true", message: "success"});
   } catch (error) {
     console.log(error);

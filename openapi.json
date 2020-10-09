@@ -34,6 +34,10 @@
     {
       "name": "file",
       "description": "Used for file handling"
+    },
+    {
+      "name": "folder",
+      "description": "Used for folder handling"
     }
   ],
   "paths": {
@@ -188,6 +192,49 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "file"
+        ],
+        "summary": "Search files",
+        "operationId": "fileSearch",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "File Path",
+            "example": "/"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Files Found / logical error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewingFiles"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/file/{fileId}": {
@@ -217,7 +264,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/File"
+                      "$ref": "#/components/schemas/ViewingFile"
                     },
                     {
                       "$ref": "#/components/schemas/Message"
@@ -263,6 +310,143 @@
         "responses": {
           "200": {
             "description": "File Delete / Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/folder": {
+      "post": {
+        "tags": [
+          "folder"
+        ],
+        "summary": "Create a new folder",
+        "operationId": "folderCreate",
+        "requestBody": {
+          "description": "Folder name with path",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatingFolder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Folder Created / logical error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "folder"
+        ],
+        "summary": "View a folder",
+        "operationId": "folderView",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "File Path",
+            "example": "/New Folder/"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder View / logical error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ViewingFolder"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need login to fulfill request"
+          },
+          "403": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "folder"
+        ],
+        "summary": "Delete a folder",
+        "operationId": "folderDelete",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "File Path",
+            "example": "/New Folder/"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder Deleted / logical error",
             "content": {
               "application/json": {
                 "schema": {
@@ -360,7 +544,7 @@
       "File": {
         "type": "object",
         "required": [
-          "it",
+          "id",
           "fileName",
           "size",
           "data",
@@ -429,6 +613,85 @@
           "path": {
             "type": "string",
             "example": "/folder/sub_folder/"
+          }
+        }
+      },
+      "ViewingFile": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example" : "false"
+          },
+          "file": {
+            "$ref": "#/components/schemas/File"
+          }
+        }
+      },
+      "ViewingFiles": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example" : "false"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/File"
+            }
+          }
+        }
+      },
+      "CreatingFolder": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "example": "/New Folder/"
+          }
+        }
+      },
+      "Folder": {
+        "type": "object",
+        "required": [
+          "id",
+          "ownerId",
+          "path"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maximum": 255,
+            "example": "f12fa660-0969-11eb-8225-d5d55e0400df"
+          },
+          "path": {
+            "type": "string",
+            "example": "/folder/sub_folder/"
+          },
+          "ownerId": {
+            "type": "string"
+          }
+        }
+      },
+      "ViewingFolder": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example" : "false"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/File"
+            }
+          },
+          "folders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Folder"
+            }
           }
         }
       }
