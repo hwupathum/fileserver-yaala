@@ -73,9 +73,10 @@ module.exports.fileView = async (req, res) => {
 
 module.exports.fileSearch = async (req, res) => {
   const token = req.cookies.auth;
+  const path = req.query.path || '/';
   try {
     // check file exists
-    const files = await File.findByPathAndToken(req.query.path, token);
+    const files = await File.findByPathAndToken(path, token);
     res.json({success: true, files });
   } catch (error) {
     console.log(error);

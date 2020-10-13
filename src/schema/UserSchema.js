@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    match: [/^[a-zA-Z0-9 ]{2,12}$/, 'Please enter a valid name'],
+    match: [/^[a-zA-Z0-9 ]{2,20}$/, 'Please enter a valid name'],
     maxlength: 100,
   },
   email: {

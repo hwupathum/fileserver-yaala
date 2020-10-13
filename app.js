@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require('cors')
 const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
 const OpenApiValidator = require('express-openapi-validator');
@@ -9,6 +10,8 @@ const db = require("./src/config/config");
 const app = express();
 
 const router = require("./src/routers");
+
+app.use(cors({ origin: 'http://localhost:5000' , credentials :  true}));
 
 // body parser
 app.use(bodyParser.urlencoded({extended : false}));
@@ -22,7 +25,7 @@ app.use(
     apiSpec: swaggerDocument,
     ignorePaths: /^\/api-docs/,
     validateRequests: true, // (default)
-    validateResponses: true, // false by default
+    // validateResponses: true, // false by default
   }),
 );
 

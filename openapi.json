@@ -521,7 +521,7 @@
           "name": {
             "type": "string",
             "minimum": 2,
-            "maximum": 12,
+            "maximum": 20,
             "example": "John Dove"
           },
           "email": {
@@ -532,12 +532,12 @@
           "password": {
             "type": "string",
             "format": "password",
-            "example": "12345678"
+            "example": "Hooray2020"
           },
           "password2": {
             "type": "string",
             "format": "password",
-            "example": "12345678"
+            "example": "Hooray2020"
           }
         }
       },
@@ -606,7 +606,6 @@
           },
           "data": {
             "type": "string",
-            "format": "byte",
             "maximum": 6e+6,
             "example": "SGVsbG8gV29ybGQ="
           },

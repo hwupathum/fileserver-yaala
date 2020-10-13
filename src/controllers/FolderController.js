@@ -32,17 +32,18 @@ module.exports.folderCreate = async (req, res) => {
 
 module.exports.folderView = async (req, res) => {
   const token = req.cookies.auth;
+  const path = req.query.path || '/';
   try {
     // check folder exists
-    const existingFolder = await Folder.findByToken(req.query.path, token);
+    const existingFolder = await Folder.findByToken(path, token);
     if(!existingFolder) {
       return res.json({success: false, message: "Folder Does not Exists"});
     }
     // find files inside folder
-    const files = await File.findByPathAndToken(req.query.path, token);
+    const files = await File.findByPathAndToken(path, token);
     // find sub folders inside folder
-    const subFolders = await Folder.findSubFoldersByToken(req.query.path, token);
-    res.json({success: true, files, subFolders });
+    const subFolders = await Folder.findSubFoldersByToken(path, token);
+    res.json({success: true, files, folders: subFolders });
   } catch (error) {
     console.log(error);
     return res.status(403).json({message: error.message})
@@ -51,19 +52,20 @@ module.exports.folderView = async (req, res) => {
 
 module.exports.folderDelete = async (req, res) => {
   const token = req.cookies.auth;
+  const path = req.query.path || '/';
   try {
-    if(req.query.path === "/") {
+    if(path === "/") {
       return res.json({success: false, message: "Folder Cannot be Deleted"});
     }
     // check folder exists
-    const existingFolder = await Folder.findByToken(req.query.path, token);
+    const existingFolder = await Folder.findByToken(path, token);
     if(!existingFolder) {
       return res.json({success: false, message: "Folder Does not Exist"});
     }
     // delete files inside folder
-    await File.findByPathAndTokenAndDelete(req.query.path, token);
+    await File.findByPathAndTokenAndDelete(path, token);
     // delete sub folders inside folder
-    await Folder.findSubFoldersByTokenAndDelete(req.query.path, token);
+    await Folder.findSubFoldersByTokenAndDelete(path, token);
     res.json({success: true, message: "Folder Deleted" });
   } catch (error) {
     console.log(error);
