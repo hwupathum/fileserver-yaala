@@ -1,6 +1,7 @@
 const File = require('./../model/File');
 const Folder = require('./../model/Folder');
 const User = require('./../model/User');
+const uuid = require('uuid');
 
 module.exports.fileUpload = async (req, res) => {
   const token = req.cookies.auth;
@@ -12,6 +13,7 @@ module.exports.fileUpload = async (req, res) => {
     }
 
     const file = new File({
+      id: uuid.v1(),
       fileName: req.body.fileName,
       data: req.body.data,
       path: req.body.path,

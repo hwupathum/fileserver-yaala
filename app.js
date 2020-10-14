@@ -20,14 +20,14 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: swaggerDocument,
-    ignorePaths: /^\/api-docs/,
-    validateRequests: true, // (default)
-    // validateResponses: true, // false by default
-  }),
-);
+// app.use(
+//   OpenApiValidator.middleware({
+//     apiSpec: swaggerDocument,
+//     ignorePaths: /^\/api-docs/,
+//     validateRequests: true, // (default)
+//     // validateResponses: true, // false by default
+//   }),
+// );
 
 app.use((err, req, res, next) => {
   // format error

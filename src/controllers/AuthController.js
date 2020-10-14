@@ -1,5 +1,6 @@
 const User = require('./../model/User');
 const Folder = require('./../model/Folder');
+const uuid = require('uuid');
 
 module.exports.login = async (req, res) => {
   const token = req.cookies.auth;
@@ -31,6 +32,7 @@ module.exports.login = async (req, res) => {
 
 module.exports.register = async (req, res) => {
   const user = new User({
+    id: uuid.v1(),
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,

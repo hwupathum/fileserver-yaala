@@ -5,7 +5,6 @@ const fileSchema = mongoose.Schema({
   id: {
     type: String,
     required: true,
-    default: Date.now()
   },
   fileName: {
     type: String,
@@ -24,7 +23,6 @@ const fileSchema = mongoose.Schema({
   uploadDate: {
     type: Date,
     required: true,
-    default: Date.now()
   },
   path: {
     type: String,

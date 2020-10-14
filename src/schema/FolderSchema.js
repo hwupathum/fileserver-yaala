@@ -5,7 +5,6 @@ const fileSchema = mongoose.Schema({
   id: {
     type: String,
     required: true,
-    default: uuid.v1()
   },
   path: {
     type: String,

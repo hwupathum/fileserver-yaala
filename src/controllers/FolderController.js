@@ -1,6 +1,7 @@
 const Folder = require('./../model/Folder');
 const User = require('./../model/User');
 const File = require('./../model/File');
+const uuid = require('uuid');
 
 module.exports.folderCreate = async (req, res) => {
   const token = req.cookies.auth;
@@ -12,6 +13,7 @@ module.exports.folderCreate = async (req, res) => {
     }
 
     const folder = new Folder({
+      id: uuid.v1(),
       path: req.body.path,
       ownerId: existingUser.id
     });
