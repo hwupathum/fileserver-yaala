@@ -5,7 +5,7 @@ const fileSchema = mongoose.Schema({
   id: {
     type: String,
     required: true,
-    default: uuid.v1()
+    default: Date.now()
   },
   fileName: {
     type: String,
@@ -17,7 +17,7 @@ const fileSchema = mongoose.Schema({
     required: true
   },
   data: {
-    type: Buffer,
+    type: String,
     maxLength: 6e+6,
     required: true
   },
