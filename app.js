@@ -14,20 +14,20 @@ const router = require("./src/routers");
 app.use(cors({ origin: 'http://localhost:5000' , credentials :  true}));
 
 // body parser
-app.use(bodyParser.urlencoded({extended : false}));
-app.use(bodyParser.text());
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : false,limit: '50mb'}));
+app.use(bodyParser.text({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
 
 app.use(cookieParser());
 
-// app.use(
-//   OpenApiValidator.middleware({
-//     apiSpec: swaggerDocument,
-//     ignorePaths: /^\/api-docs/,
-//     validateRequests: true, // (default)
-//     // validateResponses: true, // false by default
-//   }),
-// );
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: swaggerDocument,
+    ignorePaths: /^\/api-docs/,
+    validateRequests: true, // (default)
+    // validateResponses: true, // false by default
+  }),
+);
 
 app.use((err, req, res, next) => {
   // format error

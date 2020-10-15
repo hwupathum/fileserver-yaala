@@ -52,6 +52,7 @@ module.exports.register = async (req, res) => {
     // register and login user
     const data = await user.generateToken();
     const baseFolder = new Folder({
+      id: uuid.v1(),
       ownerId: data.id
     });
     await baseFolder.save();

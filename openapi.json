@@ -382,14 +382,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
                       "$ref": "#/components/schemas/ViewingFolder"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Message"
-                    }
-                  ]
                 }
               }
             }
@@ -465,7 +458,7 @@
           "password": {
             "type": "string",
             "format": "password",
-            "example": "12345678"
+            "example": "Hooray2020"
           }
         }
       },
@@ -539,7 +532,7 @@
             "type": "string",
             "format": "byte",
             "maximum": 6e6,
-            "example": "SGVsbG8gV29ybGQ="
+            "example": "data:@file/plain;base64,aGVsbG8gd29ybGQK"
           },
           "uploadDate": {
             "type": "string",
@@ -571,7 +564,7 @@
           "data": {
             "type": "string",
             "maximum": 6e6,
-            "example": "SGVsbG8gV29ybGQ="
+            "example": "data:@file/plain;base64,aGVsbG8gd29ybGQK"
           },
           "path": {
             "type": "string",
@@ -617,7 +610,7 @@
       },
       "Folder": {
         "type": "object",
-        "required": ["id", "ownerId", "path"],
+        "required": ["ownerId", "path"],
         "properties": {
           "id": {
             "type": "string",
