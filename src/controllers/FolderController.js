@@ -4,73 +4,65 @@ const File = require('./../model/File');
 const uuid = require('uuid');
 
 module.exports.folderCreate = async (req, res) => {
-  const token = req.cookies.auth;
-  try {
-    // check user exits
-    const existingUser = await User.findByToken(token);
-    if(!existingUser) {
-      return res.json({success: false, message: "User Does not Exist"});
-    }
+  const { folder, user, path } = req;
 
-    const folder = new Folder({
+  // check folder exists
+  if (folder)
+    return res.json({ success: false, message: "Folder Already Exists" });
+
+  try {
+
+    const newFolder = new Folder({
       id: uuid.v1(),
-      path: req.body.path,
-      ownerId: existingUser.id
+      path: path,
+      ownerId: user.id
     });
 
-    // check folder exists
-    const existingFolder = await Folder.findOne({ownerId: folder.ownerId, path: folder.path});
-    if(existingFolder) {
-      return res.json({success: false, message: "Folder Already Exists"});
-    }
+    await newFolder.save();
+    res.json({ success: true, message: "Folder Created Successfully" });
 
-    await folder.save();
-    res.json({success: true, message: "Folder Created Successfully"});
   } catch (error) {
     console.log(error);
-    return res.status(403).json({message: error.message})
+    return res.status(403).json({ message: error.message })
   }
 };
 
 module.exports.folderView = async (req, res) => {
-  const token = req.cookies.auth;
-  const path = req.query.path || '/';
+  const { folder, path, user } = req;
+
+  // check folder exists
+  if (!folder)
+    return res.json({ success: false, message: "Folder Does not Exists" });
+
   try {
-    // check folder exists
-    const existingFolder = await Folder.findByToken(path, token);
-    if(!existingFolder) {
-      return res.json({success: false, message: "Folder Does not Exists"});
-    }
     // find files inside folder
-    const files = await File.findByPathAndToken(path, token);
+    const files = await File.findByPath(path, user);
     // find sub folders inside folder
-    const subFolders = await Folder.findSubFoldersByToken(path, token);
-    res.json({success: true, files, folders: subFolders });
+    const subFolders = await Folder.findSubFolders(path, user);
+    res.json({ success: true, files, folders: subFolders });
   } catch (error) {
     console.log(error);
-    return res.status(403).json({message: error.message})
+    return res.status(403).json({ message: error.message })
   }
 };
 
 module.exports.folderDelete = async (req, res) => {
-  const token = req.cookies.auth;
-  const path = req.query.path || '/';
+  const { folder, path, user } = req;
+
+  if (path === "/")
+    return res.json({ success: false, message: "Folder Cannot be Deleted" });
+  // check folder exists
+  if (!folder)
+    return res.json({ success: false, message: "Folder Does not Exist" });
+
   try {
-    if(path === "/") {
-      return res.json({success: false, message: "Folder Cannot be Deleted"});
-    }
-    // check folder exists
-    const existingFolder = await Folder.findByToken(path, token);
-    if(!existingFolder) {
-      return res.json({success: false, message: "Folder Does not Exist"});
-    }
     // delete files inside folder
-    await File.findByPathAndTokenAndDelete(path, token);
+    await File.findByPathAndDelete(path, user);
     // delete sub folders inside folder
-    await Folder.findSubFoldersByTokenAndDelete(path, token);
-    res.json({success: true, message: "Folder Deleted" });
+    await Folder.findSubFoldersAndDelete(path, user);
+    res.json({ success: true, message: "Folder Deleted" });
   } catch (error) {
     console.log(error);
-    return res.status(403).json({message: error.message})
+    return res.status(403).json({ message: error.message })
   }
 };

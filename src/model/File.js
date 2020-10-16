@@ -4,22 +4,12 @@ const config = require('../config/config');
 
 const fileSchema = require("../schema/FileSchema");
 
-fileSchema.statics.findByToken = async function (fileId, token) {
-  if(!token) return token;
-  const ownerId = await jwt.verify(token, config.SECRET);
-  return this.findOne({ id: fileId, ownerId });
+fileSchema.statics.findByPath = async function (path, user) {
+  return this.find({ path, ownerId: user.id });
 };
 
-fileSchema.statics.findByPathAndToken = async function (path, token) {
-  if(!token) return token;
-  const ownerId = await jwt.verify(token, config.SECRET);
-  return this.find({ path: path ? path : '/', ownerId });
-};
-
-fileSchema.statics.findByPathAndTokenAndDelete = async function (path, token) {
-  if(!token) return token;
-  const ownerId = await jwt.verify(token, config.SECRET);
-  return this.deleteMany({ path, ownerId });
+fileSchema.statics.findByPathAndDelete = async function (path, user) {
+  return this.deleteMany({ path, ownerId: user.id });
 };
 
 module.exports = mongoose.model('Files', fileSchema);

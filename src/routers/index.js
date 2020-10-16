@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const {auth} = require('./../middlewares/auth');
+const {isLogged, isNotLogged} = require('./../middlewares/auth');
+const {folder} = require('./../middlewares/folder');
 
 const authRouter = require("./AuthRouter");
 const userRouter = require("./UserRouter");
@@ -8,9 +9,12 @@ const fileRouter = require("./FileRouter");
 const folderRouter = require("./FolderRouter");
 
 // middlewares
-app.use("/user", auth);
-app.use("/file", auth);
-app.use("/folder", auth);
+app.use("/auth", isNotLogged);
+app.use("/user", isLogged);
+app.use("/file", isLogged);
+app.use("/folder", isLogged);
+
+app.use("/folder", folder);
 
 // routers
 app.use("/auth", authRouter);
