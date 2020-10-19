@@ -4,7 +4,8 @@ const File = require('./../model/File');
 const uuid = require('uuid');
 
 module.exports.folderCreate = async (req, res) => {
-  const { folder, user, path } = req;
+  const { folder, user, body } = req;
+  const path = body.path || '/';
 
   // check folder exists
   if (folder)
@@ -28,7 +29,9 @@ module.exports.folderCreate = async (req, res) => {
 };
 
 module.exports.folderView = async (req, res) => {
-  const { folder, path, user } = req;
+  const { folder, query, user } = req;
+  const path = query.path || '/';
+
 
   // check folder exists
   if (!folder)
@@ -47,7 +50,8 @@ module.exports.folderView = async (req, res) => {
 };
 
 module.exports.folderDelete = async (req, res) => {
-  const { folder, path, user } = req;
+  const { folder, query, user } = req;
+  const path = query.path || '/';
 
   if (path === "/")
     return res.json({ success: false, message: "Folder Cannot be Deleted" });

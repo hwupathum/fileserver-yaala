@@ -1,14 +1,14 @@
 mongoose = require('mongoose');
 const uuid = require('uuid');
 
-const fileSchema = mongoose.Schema({
+const folderSchema = mongoose.Schema({
   id: {
     type: String,
     required: true,
   },
   path: {
     type: String,
-    default: "/"
+    required: true
   },
   ownerId: {
     type: String,
@@ -16,4 +16,4 @@ const fileSchema = mongoose.Schema({
   }
 });
 
-module.exports = fileSchema;
+module.exports = folderSchema;

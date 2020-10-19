@@ -6,7 +6,6 @@ const folder = async (req, res, next) => {
     try {
         const folder = await Folder.findByToken(path, token);
         req.folder = folder;
-        req.path = path;
         next();
     } catch (error) {
         throw error;
